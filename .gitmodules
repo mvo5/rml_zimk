@@ -1,0 +1,3 @@
+[submodule "libmeep"]
+	path = libmeep
+	url = git://github.com/mvo5/libmeep

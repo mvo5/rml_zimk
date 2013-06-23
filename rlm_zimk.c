@@ -24,6 +24,8 @@
 #include <freeradius/modules.h>
 #include <freeradius/conffile.h>
 
+#include "zimk_userblacklist.h"
+
 /*
  *	Define a structure for our module configuration.
  *
@@ -144,7 +146,14 @@ static int zimk_authenticate(void *instance, REQUEST *request)
 {
 	/* quiet the compiler */
 	instance = instance;
-	request = request;
+
+        /* do the actual check */
+        const char *blacklist_file = "/etc/zimk_user_blacklist.conf";
+        const char* const username = request->username->vp_strvalue;
+        if (zimk_username_in_blacklist(blacklist_file, username)) {
+           radlog(L_AUTH, "rlm_zimk: user in blacklist: %s", username);
+           return RLM_MODULE_REJECT;
+        }
 
 	return RLM_MODULE_OK;
 }
