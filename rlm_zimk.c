@@ -19,6 +19,8 @@
  * Copyright 2013 Michael Vogt <michael.vogt@uni-trier.de>
  */
 
+#include<glib.h>
+
 #include <freeradius/ident.h>
 #include <freeradius/radiusd.h>
 #include <freeradius/modules.h>

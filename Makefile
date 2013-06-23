@@ -2,10 +2,7 @@
 include common.mk
 
 MODULE_CFLAGS = $(CFLAGS)
-MODULE_LIBS = $(LIBS) libmeep/libmeep.a
-
-all: libmeep rlm_zimk.so
-	make -C libmeep
+MODULE_LIBS = $(LIBS) 
 
 rlm_zimk.so: rlm_zimk.c
 	gcc $(MODULE_CFLAGS) -c rlm_zimk.c 
