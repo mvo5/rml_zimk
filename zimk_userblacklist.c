@@ -27,7 +27,6 @@ int zimk_username_in_blacklist(const char *blacklist_file,
       if(strcmp(line, username) == 0)
          return TRUE;
    }
-   
 
    return FALSE;
 }
