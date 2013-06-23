@@ -97,49 +97,6 @@ static int zimk_instantiate(CONF_SECTION *conf, void **instance)
 }
 
 /*
- *	Find the named user in this modules database.  Create the set
- *	of attribute-value pairs to check and reply with for this user
- *	from the database. The authentication code only needs to check
- *	the password, the rest is done here.
- */
-static int zimk_authorize(void *instance, REQUEST *request)
-{
-	VALUE_PAIR *state;
-	VALUE_PAIR *reply;
-
-	/* quiet the compiler */
-	instance = instance;
-	request = request;
-
-	/*
-	 *  Look for the 'state' attribute.
-	 */
-	state =  pairfind(request->packet->vps, PW_STATE);
-	if (state != NULL) {
-		RDEBUG("Found reply to access challenge");
-		return RLM_MODULE_OK;
-	}
-
-	/*
-	 *  Create the challenge, and add it to the reply.
-	 */
-       	reply = pairmake("Reply-Message", "This is a challenge", T_OP_EQ);
-	pairadd(&request->reply->vps, reply);
-	state = pairmake("State", "0", T_OP_EQ);
-	pairadd(&request->reply->vps, state);
-
-	/*
-	 *  Mark the packet as an Access-Challenge packet.
-	 *
-	 *  The server will take care of sending it to the user.
-	 */
-	request->reply->code = PW_ACCESS_CHALLENGE;
-	RDEBUG("Sending Access-Challenge.");
-
-	return RLM_MODULE_HANDLED;
-}
-
-/*
  *	Authenticate the user with the given password.
  */
 static int zimk_authenticate(void *instance, REQUEST *request)
@@ -157,50 +114,6 @@ static int zimk_authenticate(void *instance, REQUEST *request)
 
 	return RLM_MODULE_OK;
 }
-
-/*
- *	Massage the request before recording it or proxying it
- */
-static int zimk_preacct(void *instance, REQUEST *request)
-{
-	/* quiet the compiler */
-	instance = instance;
-	request = request;
-
-	return RLM_MODULE_OK;
-}
-
-/*
- *	Write accounting information to this modules database.
- */
-static int zimk_accounting(void *instance, REQUEST *request)
-{
-	/* quiet the compiler */
-	instance = instance;
-	request = request;
-
-	return RLM_MODULE_OK;
-}
-
-/*
- *	See if a user is already logged in. Sets request->simul_count to the
- *	current session count for this user and sets request->simul_mpp to 2
- *	if it looks like a multilink attempt based on the requested IP
- *	address, otherwise leaves request->simul_mpp alone.
- *
- *	Check twice. If on the first pass the user exceeds his
- *	max. number of logins, do a second pass and validate all
- *	logins by querying the terminal server (using eg. SNMP).
- */
-static int zimk_checksimul(void *instance, REQUEST *request)
-{
-  instance = instance;
-
-  request->simul_count=0;
-
-  return RLM_MODULE_OK;
-}
-
 
 /*
  *	Only free memory we allocated.  The strings allocated via
@@ -229,10 +142,10 @@ module_t rlm_zimk = {
 	zimk_detach,			/* detach */
 	{
 	  zimk_authenticate,	/* authentication */
-	  zimk_authorize,	/* authorization */
-	  zimk_preacct,	        /* preaccounting */
-	  zimk_accounting,	/* accounting */
-	  zimk_checksimul,	/* checksimul */
+	  NULL,         	/* authorization */
+	  NULL,  	        /* preaccounting */
+	  NULL,         	/* accounting */
+	  NULL,          	/* checksimul */
 	  NULL,			/* pre-proxy */
 	  NULL,			/* post-proxy */
 	  NULL			/* post-auth */
