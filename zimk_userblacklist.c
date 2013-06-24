@@ -32,6 +32,7 @@ read_blacklisted_users(const char *blacklist_file, GTree *search_tree)
       g_strstrip(line);
       g_tree_insert(search_tree, strdup(line), "1");
    }
+   fclose(f);
 
    return TRUE;
    
