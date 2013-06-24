@@ -36,28 +36,14 @@
  *	be used as the instance handle.
  */
 typedef struct rlm_zimk_t {
-	int		boolean;
-	int		value;
-	char		*string;
-	uint32_t	ipaddr;
+	const char	*blacklist_file;
 } rlm_zimk_t;
 
-/*
- *	A mapping of configuration file names to internal variables.
- *
- *	Note that the string is dynamically allocated, so it MUST
- *	be freed.  When the configuration file parse re-reads the string,
- *	it free's the old one, and strdup's the new one, placing the pointer
- *	to the strdup'd string into 'config.string'.  This gets around
- *	buffer over-flows.
- */
 static const CONF_PARSER module_config[] = {
-  { "integer", PW_TYPE_INTEGER,    offsetof(rlm_zimk_t,value), NULL,   "1" },
-  { "boolean", PW_TYPE_BOOLEAN,    offsetof(rlm_zimk_t,boolean), NULL, "no"},
-  { "string",  PW_TYPE_STRING_PTR, offsetof(rlm_zimk_t,string), NULL,  NULL},
-  { "ipaddr",  PW_TYPE_IPADDR,     offsetof(rlm_zimk_t,ipaddr), NULL,  "*" },
+        { "blacklist_file", PW_TYPE_STRING_PTR,
+          offsetof(rlm_zimk_t, blacklist_file), NULL, NULL },
 
-  { NULL, -1, 0, NULL, NULL }		/* end the list */
+        { NULL, -1, 0, NULL, NULL }
 };
 
 
@@ -75,9 +61,6 @@ static int zimk_instantiate(CONF_SECTION *conf, void **instance)
 {
 	rlm_zimk_t *data;
 
-	/*
-	 *	Set up a storage area for instance data
-	 */
 	data = rad_malloc(sizeof(*data));
 	if (!data) {
 		return -1;
