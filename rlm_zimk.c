@@ -40,8 +40,12 @@ typedef struct rlm_zimk_t {
 } rlm_zimk_t;
 
 static const CONF_PARSER module_config[] = {
-        { "blacklist_file", PW_TYPE_STRING_PTR,
-          offsetof(rlm_zimk_t, blacklist_file), NULL, NULL },
+        { "blacklist_file", 
+          PW_TYPE_STRING_PTR,
+          offsetof(rlm_zimk_t, blacklist_file), 
+          NULL, 
+          "/etc/zimk_user_blacklist.conf" 
+        },
 
         { NULL, -1, 0, NULL, NULL }
 };
@@ -86,11 +90,11 @@ static int zimk_instantiate(CONF_SECTION *conf, void **instance)
  */
 static int zimk_authenticate(void *instance, REQUEST *request)
 {
-	/* quiet the compiler */
-	instance = instance;
+        /* cast into the right structure */
+        rlm_zimk_t *data = (rlm_zimk_t*)instance;
 
         /* do the actual check */
-        const char *blacklist_file = "/etc/zimk_user_blacklist.conf";
+        const char *blacklist_file = data->blacklist_file;
         const char* const username = request->username->vp_strvalue;
         if (zimk_username_in_blacklist(blacklist_file, username)) {
            radlog(L_AUTH, "rlm_zimk: user in blacklist: %s", username);
