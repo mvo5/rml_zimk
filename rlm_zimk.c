@@ -86,9 +86,9 @@ static int zimk_instantiate(CONF_SECTION *conf, void **instance)
 }
 
 /*
- *	Authenticate the user with the given password.
+ *	Authorize the user
  */
-static int zimk_authenticate(void *instance, REQUEST *request)
+static int zimk_authorize(void *instance, REQUEST *request)
 {
         /* cast into the right structure */
         rlm_zimk_t *data = (rlm_zimk_t*)instance;
@@ -130,8 +130,8 @@ module_t rlm_zimk = {
 	zimk_instantiate,		/* instantiation */
 	zimk_detach,			/* detach */
 	{
-	  zimk_authenticate,	/* authentication */
-	  NULL,         	/* authorization */
+          NULL,	                /* authentication */
+	  zimk_authorize,     	/* authorization */
 	  NULL,  	        /* preaccounting */
 	  NULL,         	/* accounting */
 	  NULL,          	/* checksimul */
