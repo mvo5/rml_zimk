@@ -126,7 +126,10 @@ static int zimk_detach(void *instance)
 module_t rlm_zimk = {
 	RLM_MODULE_INIT,
 	"zimk",
-	RLM_TYPE_THREAD_SAFE,		/* type */
+        /* FIXME: use g_mutex_{} to make it thread safe, the global
+         *        datastructures are not thread-safe right now
+         */ 
+	RLM_TYPE_THREAD_UNSAFE,		/* type */
 	zimk_instantiate,		/* instantiation */
 	zimk_detach,			/* detach */
 	{
