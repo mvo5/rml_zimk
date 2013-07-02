@@ -14,4 +14,10 @@ clean:
 test:
 	make -C test
 
+install: rlm_zimk.so
+	install -m 644 -u root -g root rlm_zimk.so /usr/lib/freeradius/
+
+uninstall:
+	rm -f /usr/lib/freeradius/rlm_zimk.so
+
 .PHONY: clean test
