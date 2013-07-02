@@ -54,3 +54,10 @@ Then add the user to the blacklist:
 # radtest foouser foopasswd localhost 0 testing123
 rad_recv: Access-Reject packet from host 127.0.0.1 port 1812, id=177, length=20
 ```
+
+
+References
+----------
+
+This resource: http://wiki.freeradius.org/contributing/Modules1
+is very helpful for radius module development.
