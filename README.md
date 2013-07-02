@@ -16,7 +16,7 @@ To install
 
 Copy the module in place:
 ```
-# install -m 644 -u root -g root rlm_zimk.so /usr/lib/freeradius/
+# make install
 ```
 
 Add options for the zimk module:
